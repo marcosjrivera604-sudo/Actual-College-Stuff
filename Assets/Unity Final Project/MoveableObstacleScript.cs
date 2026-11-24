@@ -3,14 +3,23 @@ using UnityEngine;
 
 public class MoveableObstacleScript : MonoBehaviour
 {
-    bool move;
-
-    public void CanItMove(Vector3 direction)
+    Vector3 startPosition;
+    bool move =true;
+    void Start()
     {
-        PerformRayCast(gameObject.transform.position, direction);
+        startPosition = gameObject.transform.position;
+    }
+    public void CanItMove(Vector3 moveDirection)
+    {
+        PerformRayCast(gameObject.transform.position, moveDirection);
         if (move == true)
         {
-            gameObject.transform.position += direction;
+            gameObject.transform.position += moveDirection;
+
+        }
+        else
+        {
+            move = true;
         }
     }
     void PerformRayCast(Vector3 start, Vector3 direction)
@@ -21,11 +30,7 @@ public class MoveableObstacleScript : MonoBehaviour
         {
             MoveableObstacleScript moveable = hit.collider.gameObject.GetComponentInParent<MoveableObstacleScript>();
             StaticObjectScript nonMoveable = hit.collider.gameObject.GetComponentInParent<StaticObjectScript>();
-            if (moveable)
-            {
-                move = false;
-            }
-            if (nonMoveable)
+            if (moveable||nonMoveable)
             {
                 move = false;
             }
@@ -34,5 +39,10 @@ public class MoveableObstacleScript : MonoBehaviour
                 move = true;
             }
         }  
+    }
+    public void ResetPosition()
+    {
+        gameObject.transform.position = startPosition;
+        Debug.Log("Position Reset");
     }
 }
